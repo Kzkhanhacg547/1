@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit JSON Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .app-form {
+            margin-bottom: 20px;
+        }
+
+        .app-form input {
+            margin-bottom: 10px;
+            display: block;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .app-form button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Edit JSON Data</h1>
+    <div class="app-form">
+        <label for="appName">App Name:</label>
+        <input type="text" id="appName" placeholder="Enter app name">
+
+        <label for="versionNumber">Version Number:</label>
+        <input type="text" id="versionNumber" placeholder="Enter version number">
+
+        <label for="downloadLink">Download Link:</label>
+        <input type="text" id="downloadLink" placeholder="Enter download link">
+
+        <button onclick="addVersion()">Add Version</button>
+    </div>
+
+    <script>
+        function addVersion() {
+            const appName = document.getElementById('appName').value;
+            const versionNumber = document.getElementById('versionNumber').value;
+            const downloadLink = document.getElementById('downloadLink').value;
+
+            if (!appName || !versionNumber || !downloadLink) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            const versionData = {
+                number: versionNumber,
+                link: downloadLink
+            };
+
+            fetch('/update-json', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ appName, versionData })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Version added successfully!");
+                    } else {
+                        alert("Failed to add version.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("Error adding version.");
+                });
+        }
+
+    </script>
+</body>
+
+</html>
